@@ -1,1 +1,3 @@
-,image,mask,gt
+image,mask,gt,path
+image/vol_01.nrrd,mask/mask_01.seg.nrrd,gt/gt_01.seg.nrrd,/Users/laurentletourneau-guillon/Dropbox (Personal)/Mac/Downloads/case_iterator_test/data
+image/vol_02.nrrd,mask/mask_02.seg.nrrd,gt/gt_02.seg.nrrd,/Users/laurentletourneau-guillon/Dropbox (Personal)/Mac/Downloads/case_iterator_test/data
