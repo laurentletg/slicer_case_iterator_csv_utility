@@ -5,16 +5,77 @@ This Python script generates a CSV file for use with the Slicer Case Iterator mo
 ## Requirements
 
 - Python 3.x
-- pandas
+- Dependencies listed in `requirements.txt`
+
+
+## Expected data (volumes & masks) input
+Make sure that the folder structure and file naming conventions are consistent for the script to work correctly.
+```
+├── gt
+│   ├── gt_01.seg.nrrd
+│   └── gt_05.seg.nrrd
+├── image
+│   ├── vol_01.nrrd
+│   └── vol_05.nrrd
+└── mask
+    ├── mask_01.seg.nrrd
+    └── mask_05.seg.nrrd
+```
 
 ## Installation
 
-1. Clone this repository or download the script.
-2. Install the required packages:
+You can set up the environment using either venv or Conda. Choose the option that best suits your workflow.
 
-```
-pip install pandas
-```
+### Option 1: Using venv
+
+1. Clone this repository or download the script.
+
+2. Create a virtual environment:
+   ```
+   python -m venv venv
+   ```
+
+3. Activate the virtual environment:
+   - On Windows:
+     ```
+     venv\Scripts\activate
+     ```
+   - On macOS and Linux:
+     ```
+     source venv/bin/activate
+     ```
+
+4. Install the required packages:
+   ```
+   pip install -r requirements.txt
+   ```
+
+### Option 2: Using Conda
+
+1. Clone this repository or download the script.
+
+2. Create a new Conda environment:
+   ```
+   conda create --name slicer-case-iterator python=3.x
+   ```
+   Replace `3.x` with your preferred Python version (e.g., 3.8, 3.9, etc.)
+
+3. Activate the Conda environment:
+   ```
+   conda activate slicer-case-iterator
+   ```
+
+4. Install the required packages:
+   ```
+   conda install --file requirements.txt
+   ```
+   
+   If some packages are not available via Conda, you can install them using pip within the Conda environment:
+   ```
+   pip install -r requirements.txt
+   ```
+
+Note: The `requirements.txt` file is already available in the repository.
 
 ## Usage
 
@@ -32,28 +93,8 @@ python script_name.py [--path PATH] [--images IMAGES] [--masks MASKS] [--gts GTS
 - `--gts`: Name of the folder containing the ground truths (default: 'gt')
 - `--extension`: File extension of the images, masks, and ground truths (default: 'nrrd')
 
-## Expected input
-Make sure that the folder structure and file naming conventions are consistent for the script to work correctly.
-```
-├── gt
-│   ├── gt_01.seg.nrrd
-│   └── gt_05.seg.nrrd
-├── image
-│   ├── vol_01.nrrd
-│   └── vol_05.nrrd
-└── mask
-    ├── mask_01.seg.nrrd
-    └── mask_05.seg.nrrd
-```
-
-
 ## Output
 
 The script generates a CSV file named 'slicer_case_iterator_input.csv' in the current working directory. This file can be directly loaded into Slicer as a table node (drag and drop).
 
-## Error Handling
-
-- The script will print an error message if the specified directories do not exist.
-- It will also print an error message if there are no files with the specified extension in the directories.
-- An assertion error is raised if the number of images, masks, and ground truths are not the same.
 
