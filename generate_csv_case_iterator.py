@@ -1,9 +1,9 @@
-import os, glob
+import os
+import glob
 import pandas as pd
 import argparse
 
 ROOT = os.path.join(os.getcwd(), 'data')
-
 
 def get_args():
     parser = argparse.ArgumentParser(description='Generate a csv file for Slicer case iterator')
@@ -16,56 +16,57 @@ def get_args():
     return args
 
 def get_rel_path(root_dir, input_dir, extension):
+    full_path = os.path.join(root_dir, input_dir)
     try:
-        assert os.path.exists(os.path.join(root_dir, input_dir))
+        assert os.path.exists(full_path)
     except AssertionError:
-        print(f'{input_dir} does not exist in {root_dir}')
+        print(f'{full_path} does not exist')
+        return []
+    
     try: 
-        paths = glob.glob(os.path.join(input_dir, '**', f'*.{extension}'), recursive=True)
+        paths = glob.glob(os.path.join(full_path, '**', f'*.{extension}'), recursive=True)
+        print(f'Found {len(paths)} {extension} files in {full_path}')
     except IndexError:
-        print(f'No {extension} files in {input_dir}')
-    paths = [os.path.relpath(i, input_dir) for i in paths]
-    return paths
+        print(f'No {extension} files in {full_path}')
+        return []
+    
+    rel_paths = [os.path.relpath(path, root_dir) for path in paths]
+    return rel_paths
 
-def get_df(dictionnary, root_dir):
-    df = pd.DataFrame(dictionnary)
+def get_df(dictionary, root_dir):
+    df = pd.DataFrame(dictionary)
     df['path'] = root_dir
-    return pd.DataFrame(dictionnary)
-
+    return df
 
 def main():
-    """
-    Main function to generate a CSV file for Slicer case iterator input.
-    This function performs the following steps:
-    1. Parses command-line arguments to get the paths and file extensions.
-    2. Retrieves relative paths for images, masks, and ground truths (gts).
-    3. Ensures that the number of images, masks, and gts are the same.
-    4. Creates a DataFrame from the collected data.
-    5. Saves the DataFrame to a CSV file named 'slicer_case_iterator_input.csv'.
-    6. Prints the status and location of the generated CSV file.
-    Raises:
-        AssertionError: If the number of images, masks, and gts are not the same.
-    """
     args = get_args()
+    print(f'Looking in root directory : {args.path}')
     images = get_rel_path(args.path, args.images, args.extension)
     masks = get_rel_path(args.path, args.masks, args.extension)
     gts = get_rel_path(args.path, args.gts, args.extension)
-    try:
-        assert len(images) == len(masks) == len(gts)
-        print(f'Same number of images {len(images)}')
-    except AssertionError:
-        print('Not the same number of images, masks and gts')
+    
+    if not (images and masks and gts):
+        print("Error: One or more directories are empty or do not exist.")
+        return
+    
+    if len(images) != len(masks) or len(images) != len(gts):
+        print('Warning: Not the same number of images, masks and gts')
+        print(f'Images: {len(images)}, Masks: {len(masks)}, GTs: {len(gts)}')
+    else:
+        print(f'Same number of files in each category: {len(images)}')
     
     data = {
-        'image':images, 
-        'mask':masks,
-        'gt':gts
+        'image': images, 
+        'mask': masks,
+        'gt': gts
     }
     df = get_df(data, args.path)
-    df.to_csv('slicer_case_iterator_input.csv')
+    output_file = 'slicer_case_iterator_input.csv'
+    df.to_csv(output_file, index=False)
     print(50 * '-')
     print('CSV generated')
-    print(f'CSV available here : {os.getcwd()}')
+    print(f'CSV available here: {os.path.abspath(output_file)}')
+    print(f'CSV name: {output_file}')
     print('Load the csv directly (drag and drop) in Slicer as a table node')
     print(50 * '-')
     
