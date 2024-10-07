@@ -1,6 +1,6 @@
 # Slicer Case Iterator CSV Generator
 
-This Python script generates a CSV file for use with the S[licer Case Iterator module]([url](https://github.com/JoostJM/SlicerCaseIterator)). It processes image, mask, and ground truth files from specified directories and creates a CSV file that can be directly loaded into Slicer as a table node.
+This Python script generates a CSV file for use with the [Slicer Case Iterator module](https://github.com/JoostJM/SlicerCaseIterator). It processes image, mask, and ground truth files from specified directories and creates a CSV file that can be directly loaded into Slicer as a table node.
 
 ## Requirements
 
