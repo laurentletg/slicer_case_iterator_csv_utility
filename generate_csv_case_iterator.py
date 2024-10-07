@@ -34,6 +34,18 @@ def get_df(dictionnary, root_dir):
 
 
 def main():
+    """
+    Main function to generate a CSV file for Slicer case iterator input.
+    This function performs the following steps:
+    1. Parses command-line arguments to get the paths and file extensions.
+    2. Retrieves relative paths for images, masks, and ground truths (gts).
+    3. Ensures that the number of images, masks, and gts are the same.
+    4. Creates a DataFrame from the collected data.
+    5. Saves the DataFrame to a CSV file named 'slicer_case_iterator_input.csv'.
+    6. Prints the status and location of the generated CSV file.
+    Raises:
+        AssertionError: If the number of images, masks, and gts are not the same.
+    """
     args = get_args()
     images = get_rel_path(args.path, args.images, args.extension)
     masks = get_rel_path(args.path, args.masks, args.extension)
