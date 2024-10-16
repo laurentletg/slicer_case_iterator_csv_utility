@@ -10,8 +10,9 @@ def get_args():
     parser.add_argument('--path', type=str, default=ROOT, help='Path to the folder containing the images, masks and gts')
     parser.add_argument('--images', type=str, default='image', help='Name of the folder containing the images')
     parser.add_argument('--masks', type=str, default='mask', help='Name of the folder containing the masks')
-    parser.add_argument('--gts', type=str, default='gt', help='Name of the folder containing the ground truth')
+    parser.add_argument('--gts', type=str, default=None, help='Name of the folder containing the ground truth')
     parser.add_argument('--extension', type=str, default='nrrd', help='Extension of the files')
+    parser.add_argument('--output', type=str, default='slicer_case_iterator_input.csv', help='Name of the output csv file')
     args = parser.parse_args()
     return args
 
@@ -43,13 +44,17 @@ def main():
     print(f'Looking in root directory : {args.path}')
     images = get_rel_path(args.path, args.images, args.extension)
     masks = get_rel_path(args.path, args.masks, args.extension)
-    gts = get_rel_path(args.path, args.gts, args.extension)
+
+    if args.gts:
+        gts = get_rel_path(args.path, args.gts, args.extension)
+    else:
+        gts = [None] * len(images)
     
-    if not (images and masks and gts):
+    if not (images and masks):
         print("Error: One or more directories are empty or do not exist.")
         return
     
-    if len(images) != len(masks) or len(images) != len(gts):
+    if len(images) != len(masks):
         print('Warning: Not the same number of images, masks and gts')
         print(f'Images: {len(images)}, Masks: {len(masks)}, GTs: {len(gts)}')
     else:
@@ -61,7 +66,7 @@ def main():
         'gt': gts
     }
     df = get_df(data, args.path)
-    output_file = 'slicer_case_iterator_input.csv'
+    output_file = os.path.join(args.path, args.output)
     df.to_csv(output_file, index=False)
     print(50 * '-')
     print('CSV generated')
