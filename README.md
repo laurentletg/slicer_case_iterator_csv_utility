@@ -82,7 +82,7 @@ Note: The `requirements.txt` file is already available in the repository.
 Run the script from the command line with optional arguments:
 
 ```
-python script_name.py [--path PATH] [--images IMAGES] [--masks MASKS] [--gts GTS] [--extension EXTENSION]
+python generate_csv_case_iterator.py [--path PATH] [--images IMAGES] [--masks MASKS] [--gts GTS] [--extension EXTENSION]
 ```
 
 ### Arguments
